@@ -26,7 +26,7 @@ function Test-Existance {
     do {
         New-PSDrive HKU Registry HKEY_USERS -Scope Global
         $ValueCheck = Get-PSDrive | Where-Object {$_.root -like "HKEY_USERS"}
-    } until ($ValueCheck.Root)
+    } until ($ValueCheck.Root -like "HKEY_USERS")
 }
 #Added Global Scope as drive was not available after the test function. 
 #Persist parameter only works on Remote FileSystems.
