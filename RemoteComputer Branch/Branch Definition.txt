@@ -1,6 +1,11 @@
 This branch will be to test and verify function can work on a remote computer.
-Current line of thinking is to run via PowerShell Remote Session.
-The ActiveDirectory module will need to be referenced from the running computer.
-Ie my own.
 
-This is because the remote computer is likely a standard users device and will not have ActiveDirectory installed.
+This would involve calling upon PowerShell Remote Session.
+
+Because the remote computer is likely a standard users device and will not have ActiveDirectory installed, the ActiveDirectory module will need to be referenced from the running computer (mine or a server).
+
+The function will need to be modified to allow the specification of a computer name.
+
+Once this works, a sub branch can be created to allow Piping on the ComputerName Parameter, so lists of computers can be checked.
+
+The end result to this function is: you have a list of usernames, and a list of domain computers. The PSSession to a computer will run parallel with other computer sessions. The usernames will be checked for validity in the Hive. Then the network drive data can be retrieved. The information should be returned onscreen with ComputerName, Username, DriveLetter, NetworkShare.
