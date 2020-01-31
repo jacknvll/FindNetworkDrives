@@ -1,0 +1,6 @@
+This branch will be to test and verify function can work on a remote computer.
+Current line of thinking is to run via PowerShell Remote Session.
+The ActiveDirectory module will need to be referenced from the running computer.
+Ie my own.
+
+This is because the remote computer is likely a standard users device and will not have ActiveDirectory installed.
