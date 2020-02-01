@@ -26,12 +26,9 @@ function Find-NetworkDrives {
             try {
                 [string]$Sid = (Get-ADUser -Identity $Identity -ErrorAction SilentlyContinue).sid
                 [string]$Location = $HKU + ":\" + $Sid + "\Network"
-                if ((Test-Path $Location) -eq $false) {
-                    Write-Host "Cannot find the path. Process cancelled."
-                    Write-Host "$Location"; break}
             }
-            catch {
-                Write-Host "$Identity cannot be found in domain"
+            catch [Microsoft.ActiveDirectory.Management.ADIdentityNotFoundException] {
+                Write-Host "$Identity is not a domain user"
                 break
             }
         } else {Write-Host "RSAT is not installed on this machine, or there is no connection to the DC"; break}
@@ -39,12 +36,16 @@ function Find-NetworkDrives {
     Process
     {
         #List the network drive letters and targets:
-        Set-Location $Location
-        $Results = Get-ItemProperty * | Format-Table pschildname,remotepath
+        try{
+            Set-Location $Location -ErrorAction Stop
+            $Results = Get-ItemProperty * | Format-Table pschildname,remotepath
+        }
+        catch {
+            Write-Host "Hive path does not exist. Process cancelled."; break
+        }
     }
     End
     {
-        #Result and Return
         Set-Location $WorkingFolder
         Remove-PSDrive $HKU
         return $Results
