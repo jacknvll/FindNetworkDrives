@@ -1,0 +1,14 @@
+____________________________________
+Function_FindNetworkDrives.ps1
+System.Security.SecurityException
+During the line containing Set-Location $Location
+This occurs when the session is run in user mode, and does not have privilege to the called user hive.
+An example of this is running as jack.neville, and trying to access the User hive for admjneville.
+
+System.Management.Automation.ItemNotFoundException
+During Set-Location, the variable between Hive and \network did not contain a value. 
+
+Microsoft.ActiveDirectory.Management.ADServerDownException
+Get-ADUser : Unable to find a default server with Active Directory Web Services running.
+This occurred when searching for a user called 'fme'. Known as a local account but not via the domain.
+________________________________________

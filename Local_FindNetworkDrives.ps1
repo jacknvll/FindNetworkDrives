@@ -1,23 +1,25 @@
 #Import functions
 . .\TestHiveExistance.ps1
-Import-Module ActiveDirectory
+. .\TestModuleReady.ps1
+if (Test-ModuleReady -eq $true){
+    #Potential Parameter/s:
+    $Person = 'jack.neville'
 
-#Potential Parameter/s:
-#$person = 'jack.neville'
+    #Variable Definitions:
+    $Error.Clear()
+    $WorkingFolder = $PWD
+    $HKU = (Test-HiveExistance HKEY_USERS).Name
+    [string]$Sid = (Get-ADUser -Identity $Person).sid
+    #[string]$Sid = 'S-1-5-21-3794749596-1985790629-174587685-144204' #SID of $Person, for when im not on the network and to do testing.
+    [string]$Location = $HKU + ":\" + $Sid + "\Network"
 
-#Variable Definitions:
-$Error.Clear()
-$WorkingFolder = $PWD
-$HKU = (Test-HiveExistance HKEY_USERS).Name
-#[string]$Sid = (Get-ADUser -Identity $person).sid   --- replaced by $manual for testing
-[string]$manual = 'S-1-5-21-3794749596-1985790629-174587685-144204' #SID of $person, for when im not on the network and to do testing.
-[string]$location = $HKU + ":\" + $manual + "\Network"
+    #List the network drive letters and targets:
+    Set-Location $Location
+    $Results = Get-ItemProperty * | Format-Table pschildname,remotepath
 
-#List the network drive letters and targets:
-Set-Location $location
-$Results = Get-ItemProperty * | Format-Table pschildname,remotepath
-
-#Result and Return
-Set-Location $WorkingFolder
-Remove-PSDrive $HKU
-return $Results
+    #Result and Return
+    Set-Location $WorkingFolder
+    Remove-PSDrive $HKU
+    return $Results
+}
+else {Write-Host "Error: ActiveDirectory module not found on computer. Install the RSAT Tools for your OS version and try again."}

@@ -5,28 +5,41 @@ function Find-NetworkDrives {
         [string]
         $Identity,
 
+        #For local function, the computer running the device will suffice. Computer name can be specified otherwise.
         [Parameter()]
         [string]
         $Computer=$env:COMPUTERNAME
-        #For local function, the computer running the device will suffice. Computer name can be specified otherwise.
     )
     Begin
     {
         #Import functions
         . .\TestHiveExistance.ps1
-        Import-Module ActiveDirectory
+        . .\TestModuleReady.ps1
+        . .\TestDomainConnection.ps1
         #Variable Definitions:
         $Error.Clear()
         $WorkingFolder = $PWD
         $HKU = (Test-HiveExistance HKEY_USERS).Name
-        #[string]$Sid = (Get-ADUser -Identity $person).sid   --- replaced by $manual for testing
-        [string]$manual = 'S-1-5-21-3794749596-1985790629-174587685-144204' #SID of $person, for when im not on the network and to do testing.
-        [string]$location = $HKU + ":\" + $manual + "\Network"
+        #Test Module Validity and Domain Connectivity:
+        if((Test-ModuleReady -and Test-DomainConnectivity) -eq $true) {
+            #Testing the validity of variables Identity and Location:
+            try {
+                [string]$Sid = (Get-ADUser -Identity $Identity -ErrorAction SilentlyContinue).sid
+                [string]$Location = $HKU + ":\" + $Sid + "\Network"
+                if ((Test-Path $Location) -eq $false) {
+                    Write-Host "Cannot find the path. Process cancelled."
+                    Write-Host "$Location"; break}
+            }
+            catch {
+                Write-Host "$Identity cannot be found in domain"
+                break
+            }
+        } else {Write-Host "RSAT is not installed on this machine, or there is no connection to the DC"; break}
     }
     Process
     {
         #List the network drive letters and targets:
-        Set-Location $location
+        Set-Location $Location
         $Results = Get-ItemProperty * | Format-Table pschildname,remotepath
     }
     End
