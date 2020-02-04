@@ -51,10 +51,3 @@ function Find-NetworkDrives {
         return $Results
     }
 }
-
-
-
-
-
-
-
