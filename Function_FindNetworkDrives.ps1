@@ -13,9 +13,9 @@ function Find-NetworkDrives {
     Begin
     {
         #Import functions
-        . .\TestHiveExistance.ps1
-        . .\TestModuleReady.ps1
-        . .\TestDomainConnection.ps1
+        . '.\Functions - Testing\TestHiveExistance.ps1'
+        . '.\Functions - Testing\TestModuleReady.ps1'
+        . '.\Functions - Testing\TestDomainConnection.ps1'
         #Variable Definitions:
         $Error.Clear()
         $WorkingFolder = $PWD
