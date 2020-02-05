@@ -20,7 +20,7 @@ The console will also create a temporary PS Drive for HKEY_USERS.
 The console will navigate to the location 'HKU:\SID\Network' and return the network drives listed under the SID key relating to the user.
 After the data is returned, the drive is removed, and the original working directory is set.
 
-## Other Functions
+## Sub Functions
 To neaten up the main function, there are three functions that are called upon.
 ### TestHiveExistance.ps1
 Checks existing PS Drives for Registry types and creates a drive otherwise. In the main function, we specify check for a drive targeting HKEY_USERS, and create if non-existant.
