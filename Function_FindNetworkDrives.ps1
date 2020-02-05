@@ -5,6 +5,11 @@ function Find-NetworkDrives {
         [string]
         $Identity,
 
+        [Parameter()]
+        [ValidateSet("Domain","Local")]
+        [string]
+        $Type,
+
         #For local function, the computer running the device will suffice. Computer name can be specified otherwise.
         [Parameter()]
         [string]
@@ -16,22 +21,23 @@ function Find-NetworkDrives {
         . '.\Functions - Testing\TestHiveExistance.ps1'
         . '.\Functions - Testing\TestModuleReady.ps1'
         . '.\Functions - Testing\TestDomainConnection.ps1'
+        . '.\Functions - Type\Type_Domain.ps1'
+        . '.\Functions - Type\Type_Local.ps1'
         #Variable Definitions:
         $Error.Clear()
         $WorkingFolder = $PWD
         $HKU = (Test-HiveExistance HKEY_USERS).Name
-        #Test Module Validity and Domain Connectivity:
-        if((Test-ModuleReady -and Test-DomainConnectivity) -eq $true) {
-            #Testing the validity of variables Identity and Location:
-            try {
-                [string]$Sid = (Get-ADUser -Identity $Identity -ErrorAction SilentlyContinue).sid
-                [string]$Location = $HKU + ":\" + $Sid + "\Network"
+
+        switch ($Type){
+            "Domain" {#Test Module Validity and Domain Connectivity:
+                if((Test-ModuleReady -and Test-DomainConnectivity) -eq $true) {
+                    $Location = Set-TypeDomain -Identity $Identity -PsDrive $HKU
+                } else {Write-Host "RSAT is not installed on this machine, or there is no connection to the DC"; break}
             }
-            catch [Microsoft.ActiveDirectory.Management.ADIdentityNotFoundException] {
-                Write-Host "$Identity is not a domain user"
-                break
+            "Local" {
+                $Location = Set-TypeLocal -Identity $Identity -PsDrive $HKU
             }
-        } else {Write-Host "RSAT is not installed on this machine, or there is no connection to the DC"; break}
+        }
     }
     Process
     {
