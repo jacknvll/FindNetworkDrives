@@ -7,7 +7,7 @@ The reason I was interested in creating this function came from an environment I
 
 I know there are batch files you can run to export drive mappings to a txt file, and have this running from a logon script. But what if your AD User already had a logon script in place? And there was no way to modify due to decades of crappy coding already within... 
 
-In the experienced environment, Group Policy was enabled, and yet so were logon scripts. The logon script was so convoluted with historic information and actions, and was managed by another department. It was time to create a function using only PowerShell coding.
+In the experienced environment, Group Policy was enabled, and yet so were logon scripts. The logon script was convoluted with  out-of-date actions, and was managed by another team. Hence, it was time to create a function I could run remotely using only PowerShell code.
 
 ## Requirements
 You will need to know the username of the user. 
