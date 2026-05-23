@@ -3,14 +3,13 @@
 . .\TestModuleReady.ps1
 if (Test-ModuleReady -eq $true){
     #Potential Parameter/s:
-    $Person = 'jack.neville'
+    $Person = ''
 
     #Variable Definitions:
     $Error.Clear()
     $WorkingFolder = $PWD
     $HKU = (Test-HiveExistance HKEY_USERS).Name
     [string]$Sid = (Get-ADUser -Identity $Person).sid
-    #[string]$Sid = 'S-1-5-21-3794749596-1985790629-174587685-144204' #SID of $Person, for when im not on the network and to do testing.
     [string]$Location = $HKU + ":\" + $Sid + "\Network"
 
     #List the network drive letters and targets:
