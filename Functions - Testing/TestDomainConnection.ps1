@@ -2,7 +2,7 @@
 function Test-DomainConnectivity
 {
     try {
-        $Connectivity = (Test-Connection 'fme.ads.fresenius.com' -Count 4 -ErrorAction SilentlyContinue | Measure-Object).Count
+        $Connectivity = (Test-Connection 'domain.com' -Count 4 -ErrorAction SilentlyContinue | Measure-Object).Count
     }
     catch {Continue}
 
