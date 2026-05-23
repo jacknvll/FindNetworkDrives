@@ -8,7 +8,12 @@ function Find-NetworkDrives {
         #For local function, the computer running the device will suffice. Computer name can be specified otherwise.
         [Parameter()]
         [string]
-        $Computer=$env:COMPUTERNAME
+        $Computer=$env:COMPUTERNAME,
+
+        # Domain Fully Qualified Domain Name
+        [Parameter()]
+        [string]
+        $DomainFQDN
     )
     Begin
     {
@@ -21,7 +26,8 @@ function Find-NetworkDrives {
         $WorkingFolder = $PWD
         $HKU = (Test-HiveExistance HKEY_USERS).Name
         #Test Module Validity and Domain Connectivity:
-        if((Test-ModuleReady -and Test-DomainConnectivity) -eq $true) {
+        $DomainTested = Test-DomainConnectivity -DomainFQDN $DomainFQDN
+        if((Test-ModuleReady -and $DomainTested) -eq $true) {
             #Testing the validity of variables Identity and Location:
             try {
                 [string]$Sid = (Get-ADUser -Identity $Identity -ErrorAction SilentlyContinue).sid
