@@ -1,24 +1,26 @@
 # FindNetworkDrives
 ## Short Summary
-A function that searches the registry hive on a domain computer to find a domain user's network drives.
+A function that searches the registry hive on an on-premise domain-joined computer to find a domain user's network drives. Obviously only for Windows machines, built with PowerShell.
 
 ## Business Case
-The reason I was interested in creating this function came from an environment I once reviewed. 
+The reason I was interested in creating this function came from an environment I once administered. 
 
 I know there are batch files you can run to export drive mappings to a txt file, and have this running from a logon script. But what if your AD User already had a logon script in place? And there was no way to modify due to decades of crappy coding already within... 
 
-In the experienced environment, Group Policy was enabled, and yet so were logon scripts. The logon script was convoluted with  out-of-date actions, and was managed by another team. Hence, it was time to create a function I could run remotely using only PowerShell code.
+In the matured environment, Group Policy was enabled, and yet so were logon scripts. The logon script was convoluted with out-of-date actions, and was managed by another team. Hence, it was time to create a function I could run remotely using only PowerShell code.
 
 ## Requirements
-You will need to know the username of the user. 
-Therefore the Active Directory module must be installed and accessible.
-HKEY_USERS requires mapping in PSDrives. A process completed in the function, and removes itself thereafter.
+You will need to know the the following:
+- Username of the user
+- The Fully Qualified Domain Name for the Active Directory tree
+- The Active Directory PowerShell module must be installed and accessible
+- HKEY_USERS must be mapped in PSDrive. Note, this is automated in the function temporarily, returning to prior configuration on completion.
 
 ## Process
-The process searches Active Directory for the requested username and converts it to the SID value.
-The console will also create a temporary PS Drive for HKEY_USERS. 
-The console will navigate to the location 'HKU:\SID\Network' and return the network drives listed under the SID key relating to the user.
-After the data is returned, the drive is removed, and the original working directory is set.
+1. The process searches Active Directory for the requested username and converts it to the SID value.
+2. The console will also create a temporary PS Drive for HKEY_USERS. 
+3. The console will navigate to the location 'HKU:\<SID>\Network' and return the network drives listed under the SID key relating to the user.
+4. After the data is returned, the drive is removed, and the original working directory is set.
 
 ## Sub Functions
 To neaten up the main function, there are three functions that are called upon.
