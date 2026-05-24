@@ -1,7 +1,7 @@
 #Test you have a stable connection to the DC when searching for a domain account.
 function Test-DomainConnectivity
 {
-[CmdletBinding()]
+    [CmdletBinding()]
     param (
         [Parameter(Mandatory=$TRUE)]
         [string]
